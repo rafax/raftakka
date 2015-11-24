@@ -1,0 +1,51 @@
+# sbt
+lib_managed/
+project/project
+target/
+auth-core/logs/
+
+# Worksheets (Eclipse or IntelliJ)
+*.sc
+
+# Eclipse
+.cache
+.classpath
+.project
+.scala_dependencies
+.settings
+.target/
+.worksheet/
+
+# IntelliJ
+.idea/
+out/
+*.iml
+
+# ENSIME
+.ensime
+.ensime_lucene/
+
+# Mac
+.DS_Store
+
+# Akka Persistence
+journal/
+snapshots/
+
+# Log files
+*.log
+
+# sbt-koan
+.koan*
+
+# CourseGen
+.tag
+
+#Angular
+.tmp
+bower_components
+node_modules
+dist
+
+#sbt
+.history
