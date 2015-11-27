@@ -1,7 +1,5 @@
 package com.gajdulewicz.raftakka
 
-abstract class StateMachine[_] {
-  def execute[T](cmd: Command[T]): T
+abstract class StateMachine[TEntry] {
+  def apply(entry: TEntry)
 }
-
-trait Command[T]

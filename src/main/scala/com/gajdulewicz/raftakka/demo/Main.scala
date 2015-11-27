@@ -1,22 +1,21 @@
 package com.gajdulewicz.raftakka.demo
 
-import akka.actor.ActorSystem
-import com.gajdulewicz.raftakka.Command
+import akka.actor.{ActorSystem, Props}
+import com.gajdulewicz.raftakka.RaftActor.UpdateConfig
+import com.gajdulewicz.raftakka.{FunctionalCluster, MemoryStorage, RaftActor, StateMachine}
 
 object Main extends App {
+  val clusterSize = 5
   val system = ActorSystem("MyActorSystem")
-  val pingActor = system.actorOf(PingActor.props, "pingActor")
-  pingActor ! PingActor.Initialize
-  // This example app will ping pong 3 times and thereafter terminate the ActorSystem - 
-  // see counter logic in PingActor
+  val members = (1 to clusterSize).map(id => system.actorOf(Props(new RaftActor[String](id, new WordAppendStateMachine, new MemoryStorage[String])), "raft_" + id)).toSet
+  members.foreach(a => a ! UpdateConfig(FunctionalCluster(members)))
   system.awaitTermination()
 }
 
+class WordAppendStateMachine extends StateMachine[String] {
+  private[this] val builder = new StringBuilder
 
-sealed trait CounterCommand extends Command[Int] {
-  def key: String
+  override def apply(entry: String): Unit = builder.append(entry + " ")
+
+  def get: String = builder.toString.trim
 }
-
-case class Get(key: String) extends CounterCommand
-
-case class Set(key: String, value: Int) extends CounterCommand
